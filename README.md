@@ -1,8 +1,23 @@
-# LLM Assistant Config: Documentation Anonymization Assistant (Whistleblower Assistant)
+# Claude Anonymisation Assistant — Plugin
 
-*17-Dec-24*
+*Originally written 17-Dec-24 as an LLM assistant configuration; reshaped 30-Apr-26 into a Claude Code plugin.*
 
 ![alt text](images/header.png)
+
+## Plugin form
+
+This repository is a Claude Code plugin. It exposes two skills:
+
+- **`anonymise-document`** — read a sensitive document and produce an anonymised version with a substitution log.
+- **`propose-substitutions`** — preview the substitution table for review before any rewrite (use for high-stakes documents or multi-document name-map consistency).
+
+Manifest: `.claude-plugin/plugin.json`. Skills: `skills/`.
+
+The original prompt configurations remain in `configurations/` for reference; the synthetic test corpus in `test-data/` is preserved as evaluation fixtures.
+
+---
+
+## Original project notes
 
 [![View on Hugging Face](https://img.shields.io/badge/View%20on-Hugging%20Face-ff9b34?style=for-the-badge&logo=huggingface&logoColor=white)](https://hf.co/chat/assistant/6760b39606189c9ac0656dd6)
 

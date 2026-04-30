@@ -1,0 +1,13 @@
+{
+  "name": "anonymisation-assistant",
+  "version": "0.1.0",
+  "description": "Anonymise sensitive documents (whistleblower disclosures, harassment diaries, incident reports) by replacing identifying details while preserving narrative integrity.",
+  "author": {
+    "name": "Daniel Rosehill",
+    "url": "https://github.com/danielrosehill"
+  },
+  "homepage": "https://github.com/danielrosehill/Claude-Anonymisation-Assistant-Plugin",
+  "repository": "https://github.com/danielrosehill/Claude-Anonymisation-Assistant-Plugin",
+  "license": "MIT",
+  "keywords": ["anonymisation", "redaction", "privacy", "whistleblower", "pii"]
+}
