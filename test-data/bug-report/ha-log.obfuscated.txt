@@ -1,0 +1,9 @@
+2026-03-14 21:04:11.482 ERROR (MainThread) [homeassistant.components.light] Failed to call service light.turn_on on light.guest_bedroom_ceiling
+Traceback (most recent call last):
+  File "/usr/src/homeassistant/homeassistant/components/zha/light.py", line 412, in async_turn_on
+    await self._device.send_command(transition=2.0)
+zigpy.exceptions.DeliveryError: Failed to deliver message: 0xE1 on 192.168.50.41 via coordinator 192.168.50.5:6638
+2026-03-14 21:04:12.019 WARNING (MainThread) [custom_components.hub] group light.first_floor_lights member light.guest_bedroom_ceiling unavailable (device a1b2c3d4e5f60718293a4b5c6d7e8f90, mac 3c:61:05:aa:bb:01)
+2026-03-14 21:04:13.100 DEBUG host=ha-server.local remote=203.0.113.33 user=user@example.com path=/home/homeuser/ha-config/secrets.yaml
+2026-03-14 21:04:13.410 DEBUG latitude: 51.50000 longitude: -2.50000 api_key: EXAMPLEKEY00
+Guest Bedroom Ceiling reported unavailable; guest-bedroom-ceiling removed from scene.bedtime_guest

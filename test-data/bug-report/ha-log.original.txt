@@ -1,0 +1,9 @@
+2026-03-14 21:04:11.482 ERROR (MainThread) [homeassistant.components.light] Failed to call service light.turn_on on light.marlowe_nursery_ceiling
+Traceback (most recent call last):
+  File "/usr/src/homeassistant/homeassistant/components/zha/light.py", line 412, in async_turn_on
+    await self._device.send_command(transition=2.0)
+zigpy.exceptions.DeliveryError: Failed to deliver message: 0xE1 on 192.168.77.41 via coordinator 192.168.77.5:6638
+2026-03-14 21:04:12.019 WARNING (MainThread) [custom_components.hub] group light.upstairs_lights member light.marlowe_nursery_ceiling unavailable (device 7f3a9c2e41d84b6fa0c1e5d2b7346a90, mac 3c:61:05:4e:9a:17)
+2026-03-14 21:04:13.100 DEBUG host=ha-attic.local remote=86.14.201.33 user=j.hartwell@fernleaf.example.org path=/home/jhartwell/ha-config/secrets.yaml
+2026-03-14 21:04:13.410 DEBUG latitude: 51.47293 longitude: -2.59471 api_key: q8Zr2LmXw9Tt
+Marlowe Nursery Ceiling reported unavailable; marlowe-nursery-ceiling removed from scene.bedtime_marlowe

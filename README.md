@@ -1,59 +1,68 @@
-# Claude Anonymisation Assistant — Plugin
+# Obfuscation Tools
 
-*Originally written 17-Dec-24 as an LLM assistant configuration; reshaped 30-Apr-26 into a Claude Code plugin.*
+![Obfuscation Tools header](images/header.png)
 
-![alt text](images/header.png)
+Agent skills for sharing real material without sharing the real details. Instead of blanking things out, they replace identifying details with plausible stand-ins, so the result stays useful and still reads as real.
 
-## Plugin form
+| Redaction | Obfuscation |
+|---|---|
+| `Failed on [ENTITY] at [IP]` | `Failed on light.guest_bedroom_ceiling at 192.168.50.41` |
 
-This repository is a Claude Code plugin. It exposes two skills:
+The two main uses:
 
-- **`anonymise-document`** — read a sensitive document and produce an anonymised version with a substitution log.
-- **`propose-substitutions`** — preview the substitution table for review before any rewrite (use for high-stakes documents or multi-document name-map consistency).
+- **Bug reports and logs.** Entity names, IPs, hostnames and IDs change, but subnets, group membership, formats and errors survive, so a maintainer can debug it as if it were the original.
+- **Sensitive documents.** Whistleblower disclosures, complaints and incident diaries keep their narrative while people, organisations, places and dates change.
 
-Manifest: `.claude-plugin/plugin.json`. Skills: `skills/`.
+## Proximity
 
-The original prompt configurations remain in `configurations/` for reference; the synthetic test corpus in `test-data/` is preserved as evaluation fixtures.
+The main parameter is how close replacements stay to the originals, chosen from the privacy and risk background:
 
----
+- **conservative**: the lightest touch, with near neighbours of the originals. For low-risk sharing with outsiders.
+- **moderate**: same category, clearly a different thing.
+- **liberal**: only the role in the story survives. For when an insider could recognise the source, or exposure carries real consequences.
 
-## Original project notes
+Details are in [`references/proximity-levels.md`](references/proximity-levels.md) and [`references/technical-substitutions.md`](references/technical-substitutions.md).
 
-[![View on Hugging Face](https://img.shields.io/badge/View%20on-Hugging%20Face-ff9b34?style=for-the-badge&logo=huggingface&logoColor=white)](https://hf.co/chat/assistant/6760b39606189c9ac0656dd6)
+## Skills
 
-The purpose of this repository and the sharing of this configuration is to serve the public good in a very small way by providing one or possibly more model configurations for large language model assistants instructed to help the user with anonymizing documents for the purpose of safely sharing information while deliberately obfuscating one's identity. 
+- `obfuscate-bug-report`: obfuscate a bug report, log or config while keeping it debuggable.
+- `obfuscate-document`: obfuscate a document at a chosen proximity level.
+- `propose-substitutions`: preview and approve the replacement table before anything changes.
+- `scan-and-obfuscate`: detect PII and secrets, then replace the findings. Uses [`pii-scanner`](https://github.com/danielrosehill/Claude-PII-Scanner-Plugin) if it's there, and falls back to regex if not.
 
-To be more opaque: The use case envisioned here is helping whistleblowers.
+## Script
 
-While in general I try to consolidate my LLM assistant configurations in a single repository (see: [Custom LLM Agents](https://github.com/danielrosehill/Custom-LLM-Agents)), occasionally I feel that the projects are potentially significant enough to warrant their own repositories.
+`scripts/obfuscate.py` uses only the Python standard library, so replacements don't depend on a model rewriting text correctly.
 
-## Notes About Context & Approach
+```bash
+python3 scripts/obfuscate.py scan   log.txt --profile home-assistant --out findings.json
+python3 scripts/obfuscate.py apply  log.txt --map map.json --out log.obfuscated.txt
+python3 scripts/obfuscate.py verify log.obfuscated.txt --map map.json
+```
 
-When redacting information, whistleblowers commonly take the approach of trying to substitute identifiable or indirectly identifiable information with replacement data that alters particulars which are unimportant in the broad context. I thought that this would be a good task for a large language model, provided that it was able to distinguish between information that requires and did not require changes.
+- `scan` lists IPs (classed as private or public), MACs, emails, hostnames, UUIDs, secrets, home-directory users and coordinates. `--profile home-assistant` adds entity IDs.
+- `apply` replaces in one pass, longest value first, so `10.0.0.1` doesn't touch `10.0.0.12` and a replacement is never rewritten. It rejects maps that merge two values or collide with text already in the source, and it won't overwrite the input.
+- `verify` looks for any surviving original, including case changes and other forms such as `kitchen_ceiling` for `Kitchen Ceiling`. It exits 1 on a leak.
 
-As in any use case involving AI, human supervision is both warranted and recommended. These configurations were written with the assumption that the user in question would likely wish to scrutinize carefully the modified output.
+`test-data/bug-report/` has a worked example with synthetic data: `ha-log.original.txt`, `ha-log.map.json` and `ha-log.obfuscated.txt`.
 
-The configuration Includes specifics about what type of personal information should always be redacted And these could be easily modified according to requirements. V2 is an LLM improved version of the first configuration. It's made available both in `JSON` and `Markdown` and sets out these elements a little bit more deterministically. 
+## Limits
 
-The example provided in`V1` Is intended to guide the assistant in the style to be followed. It does require that the model leverage some inference in order to distinguish autonomously between information that *must* be redacted in all cases and information which must *never* be redacted in any case.  
+- `verify` proves mapped values are gone. It can't prove the map was complete, so a person should still read the output.
+- Swapping names doesn't hide facts. Who attended a meeting, or who could access a file, can identify a source with no names at all. Skills check for this at liberal, but no tool guarantees anonymity.
+- An obfuscated document contains altered facts, so it isn't evidence. Keep the original unchanged, and take legal advice before a formal disclosure.
+- Maps decode the output, so they're stored in the plugin's data directory, away from the files they produced.
 
-## Ideas For Variants
+## Installation
 
-Taking this configuration as a starting point, there are several variations on this theme which could also be helpful and useful. 
+```bash
+claude plugins install obfuscation-tools@danielrosehill
+```
 
-- One example is that the Assistant could be configured to proposed substitutions for identifiable data before implementing them. This could prevent the situation in which these substitute synthetic data which the LLM decides upon is not sufficiently distinguished from the real facts. 
+## History
 
-This configuration is intended more as a proof of concept and to demonstrate the use case than as a definitive text. But it's hoped that it will provide some utility for those requiring its services.
+Started in December 2024 as an LLM assistant configuration for helping whistleblowers anonymise documents, then became the `anonymisation-assistant` plugin in April 2026. Renamed and widened to `obfuscation-tools` in November 2026. The original prompts remain in `configurations/`, and synthetic diary fixtures in `test-data/`.
 
-To generate synthetic data for your own test cases, using an abliterated or uncensored large language model Is not only recommended, but may be necessary depending upon the model's threshold for generating refusals.
+## License
 
-If you sadly have to include graphic descriptions of a particular kind to validate that the model will handle working with data which is representative of a situation you might require it for, these models are probably essential. The two fictitious diaries in the test data folder are simply intended to be representative of synthetic data describing instances of workplace harassment. 
-
-## Demonstration Documents, Testing, Validation
-
-The test data folder provides examples of the `V1` configuration which I wrote. 
-
-The underlying model was `Llama 3.3 70B Instruct `as hosted and deployed on Hugging Face Chat.
-
-These test runs demonstrated overall good adherence to the requirements as set down in the test prompt. The before and after texts can be viewed in the `test data` folder.  The diary entries which were used for the purpose of testing contain synthetic data generated by the same model. Any likeness to any individuals or organizations in the scenarios depicted was entirely unintended.   
-
+MIT

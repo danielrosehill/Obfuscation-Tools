@@ -1,0 +1,22 @@
+{
+  "case": "fixture-ha-log",
+  "level": "conservative",
+  "entries": [
+    {"original": "light.marlowe_nursery_ceiling", "replacement": "light.guest_bedroom_ceiling", "type": "ha-entity"},
+    {"original": "light.upstairs_lights", "replacement": "light.first_floor_lights", "type": "ha-entity"},
+    {"original": "scene.bedtime_marlowe", "replacement": "scene.bedtime_guest", "type": "ha-entity"},
+    {"original": "Marlowe Nursery Ceiling", "replacement": "Guest Bedroom Ceiling", "type": "friendly-name"},
+    {"original": "marlowe-nursery-ceiling", "replacement": "guest-bedroom-ceiling", "type": "slug"},
+    {"original": "192.168.77.41", "replacement": "192.168.50.41", "type": "ipv4"},
+    {"original": "192.168.77.5", "replacement": "192.168.50.5", "type": "ipv4"},
+    {"original": "86.14.201.33", "replacement": "203.0.113.33", "type": "ipv4"},
+    {"original": "7f3a9c2e41d84b6fa0c1e5d2b7346a90", "replacement": "a1b2c3d4e5f60718293a4b5c6d7e8f90", "type": "device-id"},
+    {"original": "3c:61:05:4e:9a:17", "replacement": "3c:61:05:aa:bb:01", "type": "mac"},
+    {"original": "ha-attic.local", "replacement": "ha-server.local", "type": "hostname"},
+    {"original": "j.hartwell@fernleaf.example.org", "replacement": "user@example.com", "type": "email"},
+    {"original": "jhartwell", "replacement": "homeuser", "type": "username"},
+    {"original": "51.47293", "replacement": "51.50000", "type": "coordinate"},
+    {"original": "-2.59471", "replacement": "-2.50000", "type": "coordinate"},
+    {"original": "q8Zr2LmXw9Tt", "replacement": "EXAMPLEKEY00", "type": "secret"}
+  ]
+}
